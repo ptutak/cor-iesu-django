@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cor-iesu-django"
+description = "Cor Iesu - a simple web application for managing prayer intentions."
+authors = [
+    {name = "Piotr Tutak", email = "p.tutak@outlook.com"},
+]
+dependencies = [
+]
+requires-python = ">=3.11"
+readme = "README.md"
+license = {file = "LICENSE"}
+dynamic = ["version"]
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line-length = 120
+
+[tool.flake8]
+max-line-length = 120
+extend-ignore = [
+    "E203",
+    "D100",  # public module
+    "D104",  # public package
+    "D105",  # magic methods
+    "DCO010", # duplicate of public method
+    "DCO060", # public attributes - they're already documented if it is a property.
+]
+exclude = ["build", "tests"]
+convention = "google"
+
+[tool.mypy]
+packages = ["src"]
+exclude = ["tests"]
+ignore_missing_imports = true
+strict = true
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 85
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-vv", "-s"]
+
+[tool.setuptools.dynamic]
+version = {file = "VERSION"}
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "pre-commit",
+    "pytest",
+    "pytest-cov",
+    "pytest-xdist",
+]
