@@ -5,10 +5,24 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:65d2b5f57dd63203fcbb970ed6568faeef280ebcc1dc45f138b75cad4c16bf40"
+content_hash = "sha256:2b69f1e2a9a5efc3149330df3738ba093cb95ab41659bf7bdbc7bcd9f22f6059"
 
 [[metadata.targets]]
 requires_python = ">=3.11"
+
+[[package]]
+name = "asgiref"
+version = "3.8.1"
+requires_python = ">=3.8"
+summary = "ASGI specs, helper code, and adapters"
+groups = ["default"]
+dependencies = [
+    "typing-extensions>=4; python_version < \"3.11\"",
+]
+files = [
+    {file = "asgiref-3.8.1-py3-none-any.whl", hash = "sha256:3e1e3ecc849832fe52ccf2cb6686b7a55f82bb1d6aee72a58826471390335e47"},
+    {file = "asgiref-3.8.1.tar.gz", hash = "sha256:c343bd80a0bec947a9860adb4c432ffa7db769836c64238fc34bdc3fec84d590"},
+]
 
 [[package]]
 name = "cfgv"
@@ -146,6 +160,22 @@ groups = ["dev"]
 files = [
     {file = "distlib-0.3.8-py2.py3-none-any.whl", hash = "sha256:034db59a0b96f8ca18035f36290806a9a6e6bd9d1ff91e45a7f172eb17e51784"},
     {file = "distlib-0.3.8.tar.gz", hash = "sha256:1530ea13e350031b6312d8580ddb6b27a104275a31106523b8f123787f494f64"},
+]
+
+[[package]]
+name = "django"
+version = "5.1.1"
+requires_python = ">=3.10"
+summary = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
+groups = ["default"]
+dependencies = [
+    "asgiref<4,>=3.8.1",
+    "sqlparse>=0.3.1",
+    "tzdata; sys_platform == \"win32\"",
+]
+files = [
+    {file = "Django-5.1.1-py3-none-any.whl", hash = "sha256:71603f27dac22a6533fb38d83072eea9ddb4017fead6f67f2562a40402d61c3f"},
+    {file = "Django-5.1.1.tar.gz", hash = "sha256:021ffb7fdab3d2d388bc8c7c2434eb9c1f6f4d09e6119010bbb1694dda286bc2"},
 ]
 
 [[package]]
@@ -338,6 +368,29 @@ files = [
     {file = "PyYAML-6.0.2-cp313-cp313-win32.whl", hash = "sha256:bc2fa7c6b47d6bc618dd7fb02ef6fdedb1090ec036abab80d4681424b84c1183"},
     {file = "PyYAML-6.0.2-cp313-cp313-win_amd64.whl", hash = "sha256:8388ee1976c416731879ac16da0aff3f63b286ffdd57cdeb95f3f2e085687563"},
     {file = "pyyaml-6.0.2.tar.gz", hash = "sha256:d584d9ec91ad65861cc08d42e834324ef890a082e591037abe114850ff7bbc3e"},
+]
+
+[[package]]
+name = "sqlparse"
+version = "0.5.1"
+requires_python = ">=3.8"
+summary = "A non-validating SQL parser."
+groups = ["default"]
+files = [
+    {file = "sqlparse-0.5.1-py3-none-any.whl", hash = "sha256:773dcbf9a5ab44a090f3441e2180efe2560220203dc2f8c0b0fa141e18b505e4"},
+    {file = "sqlparse-0.5.1.tar.gz", hash = "sha256:bb6b4df465655ef332548e24f08e205afc81b9ab86cb1c45657a7ff173a3a00e"},
+]
+
+[[package]]
+name = "tzdata"
+version = "2024.1"
+requires_python = ">=2"
+summary = "Provider of IANA time zone data"
+groups = ["default"]
+marker = "sys_platform == \"win32\""
+files = [
+    {file = "tzdata-2024.1-py2.py3-none-any.whl", hash = "sha256:9068bc196136463f5245e51efda838afa15aaeca9903f49050dfa2679db4d252"},
+    {file = "tzdata-2024.1.tar.gz", hash = "sha256:2674120f8d891909751c38abcdfd386ac0a5a1127954fbc332af6b5ceae07efd"},
 ]
 
 [[package]]
