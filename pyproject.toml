@@ -32,12 +32,12 @@ extend-ignore = [
     "DCO010", # duplicate of public method
     "DCO060", # public attributes - they're already documented if it is a property.
 ]
-exclude = ["build", "tests"]
+exclude = ["build", "tests", "src/manage.py", "src/cor_iesu"]
 convention = "google"
 
 [tool.mypy]
 packages = ["src"]
-exclude = ["tests"]
+exclude = ["tests", "src/manage.py", "src/cor_iesu"]
 ignore_missing_imports = true
 strict = true
 
