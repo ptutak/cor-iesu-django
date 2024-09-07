@@ -48,4 +48,5 @@ repos:
         - id: mypy
           additional_dependencies:
             - django-stubs[compatible-mypy]
+            - django-stubs-ext
           pass_filenames: false
