@@ -25,4 +25,5 @@ run-dev:
 
 .PHONY: migrate
 migrate:
+	python src/manage.py makemigrations
 	python src/manage.py migrate
