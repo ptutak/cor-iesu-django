@@ -32,14 +32,29 @@ extend-ignore = [
     "DCO010", # duplicate of public method
     "DCO060", # public attributes - they're already documented if it is a property.
 ]
-exclude = ["build", "tests", "src/manage.py", "src/cor_iesu"]
+exclude = [
+    "build",
+    "tests",
+    "src/manage.py",
+    "src/cor_iesu",
+    "src/adoration/migrations",
+]
 convention = "google"
 
 [tool.mypy]
 packages = ["src"]
-exclude = ["tests", "src/manage.py", "src/cor_iesu"]
+exclude = [
+    "tests",
+    "src/manage.py",
+    "src/cor_iesu",
+    "src/adoration/migrations",
+]
 ignore_missing_imports = true
 strict = true
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "cor_iesu.settings"
 
 [tool.coverage.run]
 source = ["src"]

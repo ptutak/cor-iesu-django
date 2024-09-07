@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 
+
 class Config(models.Model):
     # db_table = "config"
 
@@ -18,6 +19,7 @@ class Period(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
 
 class Collection(models.Model):
     # db_table = "collections"
@@ -36,9 +38,10 @@ class PeriodCollection(models.Model):
 
     period: models.ForeignKey = models.ForeignKey(Period, on_delete=models.CASCADE)
     collection: models.ForeignKey = models.ForeignKey(Collection, on_delete=models.CASCADE)
+
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['period', 'collection'], name='period_collection_unique_constraint'),
+            models.UniqueConstraint(fields=["period", "collection"], name="period_collection_unique_constraint"),
         ]
 
     def __str__(self) -> str:
@@ -58,7 +61,7 @@ class CollectionConfig(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['collection', 'name'], name='collection_config_unique_constraint'),
+            models.UniqueConstraint(fields=["collection", "name"], name="collection_config_unique_constraint"),
         ]
 
     def __str__(self) -> str:
