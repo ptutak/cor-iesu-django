@@ -1,15 +1,16 @@
 from collections import namedtuple
 
 from django.db.models import Count
-from django.http import HttpRequest, HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.http import HttpRequest, HttpResponse, JsonResponse, HttpResponseBadRequest
+from django.shortcuts import render, redirect
 
 from .const import DefaultValues
-from .models import (
-    Collection,
-    CollectionConfig,
-    PeriodCollection,
-)
+from .models import Collection, CollectionConfig, PeriodCollection, PeriodAssignment
+
+
+class G:
+    user: bool = False
+    admin: bool = False
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -17,12 +18,6 @@ def index(request: HttpRequest) -> HttpResponse:
 
 
 def assignments(request: HttpRequest) -> HttpResponse:
-    # collections_configs = db.session.execute(
-    #     select(CollectionConfig, Collection)
-    #     .join(CollectionConfig.collection)
-    #     .where(Collection.enabled)
-    #     .where(CollectionConfig.name == CollectionConfig.ConfigKeys.ASSIGNMENT_LIMIT)
-    # ).all()
     collections_configs = CollectionConfig.objects.filter(
         collection__enabled=True, name=CollectionConfig.ConfigKeys.ASSIGNMENT_LIMIT
     )
@@ -51,10 +46,6 @@ def assignments(request: HttpRequest) -> HttpResponse:
 
         available_collections = Collection.objects.filter(enabled=True)
 
-        class G:
-            user: bool = False
-            admin: bool = False
-
         return render(
             request,
             "adoration/assignments.html.jinja2",
@@ -62,55 +53,44 @@ def assignments(request: HttpRequest) -> HttpResponse:
                 "free_assignments": free_assignments,
                 "available_collections": available_collections,
                 "period_collections": period_collections,
-                "g": G()
+                "g": G(),
             },
         )
 
-    #     g.available_collections = db.session.scalars(select(Collection).where(Collection.enabled)).all()
+    form = request.POST
+    form_fields_required = {"collection-select", "period-select", "first-name", "last-name"}
+    if not form_fields_required.issubset(form.keys()):
+         return HttpResponseBadRequest(f"You have to provide the following form fields: {form_fields_required}")
 
-    #     db.session.commit()
+    if "email" not in form and "phone-number" not in form:
+        return HttpResponseBadRequest("You have to provide one of those form fields: 'email', 'phone-number'")
 
-    #     return render_template("assignments.html.jinja2")
+    period_collection_id = int(form["period-select"])
+    first_name = form["first-name"]
+    last_name = form["last-name"]
+    email = None
+    phone_number = None
+    if "email" in form:
+        email = form["email"]
+    if "phone-number" in form:
+        phone_number = str(form["phone-number"])
 
-    # form = request.form.to_dict()
-    # form_fields_required = {"collection-select", "period-select", "first-name", "last-name"}
-    # if not form_fields_required.issubset(form.keys()):
-    #     return abort(400, f"You have to provide the following form fields: {form_fields_required}")
+    period_collection = PeriodCollection.objects.filter(id=period_collection_id, collection__enabled=True).annotate(
+        assignments_count=Count("periodassignment")
+    ).first()
 
-    # if "email" not in form and "phone-number" not in form:
-    #     return abort(400, "You have to provide one of those form fields: 'email', 'phone-number'")
+    if period_collection is None:
+        return HttpResponseBadRequest("The period collection you have sellected is not available")
 
-    # period_collection_id = int(form["period-select"])
-    # collection_id = int(form["collection-select"])
-    # first_name = form["first-name"]
-    # last_name = form["last-name"]
-    # email = None
-    # phone_number = None
-    # if "email" in form:
-    #     email = form["email"]
-    # if "phone-number" in form:
-    #     phone_number = form["phone-number"]
 
-    # period_collections = db.session.execute(
-    #     select(PeriodCollection.id, func.count(PeriodAssignment.id).label("period_assignment_count"))
-    #     .join(PeriodCollection.assignments, isouter=True)
-    #     .where(PeriodCollection.id == period_collection_id)
-    #     .group_by(PeriodCollection.id)
-    # ).first()
 
-    # if period_collections is None:
-    #     return abort(400, "The period collection you have sellected is not available")
+    if period_collection.assignments_count < limit_per_collection.get(period_collection.collection.id, DefaultValues.ASSIGNMENT_LIMIT):
+        new_assignment = PeriodAssignment(
+            period_collection=PeriodCollection.objects.get(id=period_collection_id),
+            attendant_email=email,
+            attendant_phone_number=phone_number,
+            attendant_name=f"{first_name} {last_name}",
+        )
+        new_assignment.save()
 
-    # if period_collections.period_assignment_count < limit_per_collection.get(
-    #     collection_id,
-    #     g.config.get(DatabaseKeys.ASSIGNMENT_LIMIT, DefaultValues.ASSIGNMENT_LIMIT),
-    # ):
-    #     new_assignment = PeriodAssignment()
-    #     new_assignment.id_period_collection = period_collection_id
-    #     new_assignment.attendant_email = email
-    #     new_assignment.attendant_phone_number = phone_number
-    #     new_assignment.attendant_name = f"{first_name} {last_name}"
-    #     db.session.add(new_assignment)
-    # db.session.commit()
-
-    return JsonResponse({"limit_per_collection": limit_per_collection, "free_assignments": free_assignments})
+    return redirect("assignments")

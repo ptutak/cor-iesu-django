@@ -1,5 +1,8 @@
 from django.db import models
-
+from django.contrib.auth.models import User
+from django.contrib.admin import ModelAdmin
+from django.contrib import admin
+from django.http import HttpRequest
 # Create your models here.
 
 
@@ -19,7 +22,6 @@ class Period(models.Model):
 
     def __str__(self) -> str:
         return self.name
-
 
 class Collection(models.Model):
     # db_table = "collections"
@@ -73,8 +75,13 @@ class PeriodAssignment(models.Model):
 
     period_collection = models.ForeignKey(PeriodCollection, on_delete=models.CASCADE)
     attendant_name = models.CharField(max_length=100, blank=False)
-    attendant_email = models.CharField(max_length=80, blank=True, null=True)
+    attendant_email = models.CharField(max_length=80, blank=False)
     attendant_phone_number = models.CharField(max_length=15, blank=True, null=True)
 
     def __str__(self) -> str:
         return f"{self.period_collection.collection.name}: {self.period_collection.period.name} - {self.attendant_name}"
+
+class Maintainer(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=15, blank=True)
+    country = models.CharField(max_length=30, blank=False)

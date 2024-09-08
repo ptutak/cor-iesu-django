@@ -11,44 +11,35 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="{{ url_for('views.assignments') }}">Adoracja</a>
+        <a class="navbar-brand" href="{% url 'assignments' %}">Adoracja</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           {% if g.user %}
           <ul class="navbar-nav me-auto">
-            <li class="nav-item me-2">{{ g.user["username"] }}</li>
-            <li class="nav-item me-2">{{ g.user["first_name"] }}</li>
-            <li class="nav-item me-4">{{ g.user["last_name"] }}</li>
+            <li class="nav-item me-2">{{ "username" }}</li>
+            <li class="nav-item me-2">{{ "first_name" }}</li>
+            <li class="nav-item me-4">{{ "last_name" }}</li>
           </ul>
           {% endif %}
           <ul class="navbar-nav ms-auto">
-            {% if g.admin %}
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('views.admin_config') }}">Konfiguracja</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('views.admin_users') }}">Użytkownicy</a></li>
-            {% endif %}
             {% if g.user %}
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Wyloguj</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ 'url_for(auth.logout)' }}">Wyloguj</a></li>
             {% else %}
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}">Rejestracja</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Logowanie</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ 'url_for(auth.register)' }}">Rejestracja</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ 'url_for(auth.login)' }}">Logowanie</a></li>
             {% endif %}
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('views.assignments') }}">Zapisy</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'assignments' %}">Zapisy</a></li>
           </ul>
         </div>
       </div>
     </nav>
     <section class="mx-5 my-5">
       <header class="my-5">
-        {% if g.admin %}
-        <h3 class="my-5">Aktualna lista adoracji: {{ g.collection.name }}</h3>
-        {% endif %}
         {% block header %}{% endblock %}
       </header>
-      {% for message in get_flashed_messages() %}
-        <div class="flash">{{ message }}</div>
-      {% endfor %}
+
       {% block content %}
       {% endblock %}
     </section>
