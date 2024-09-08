@@ -50,6 +50,7 @@ exclude = [
     "src/adoration/migrations",
 ]
 ignore_missing_imports = true
+warn_unused_ignores = false
 strict = true
 plugins = ["mypy_django_plugin.main"]
 
@@ -77,4 +78,7 @@ dev = [
     "pytest",
     "pytest-cov",
     "pytest-xdist",
+    "mypy>=1.11.2",
+    "django-stubs[compatible-mypy]>=5.0.4",
+    "django-stubs-ext>=5.0.4",
 ]

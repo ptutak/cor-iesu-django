@@ -6,16 +6,16 @@ from django.db import models
 class Config(models.Model):
     # db_table = "config"
 
-    name: models.CharField = models.CharField(max_length=100, unique=True, blank=False)
-    value: models.CharField = models.CharField(max_length=255, blank=False)
-    description: models.CharField = models.CharField(max_length=600, blank=False)
+    name = models.CharField(max_length=100, unique=True, blank=False)
+    value = models.CharField(max_length=255, blank=False)
+    description = models.CharField(max_length=600, blank=False)
 
 
 class Period(models.Model):
     # db_table = "periods"
 
-    name: models.CharField = models.CharField(max_length=100, unique=True, blank=False)
-    description: models.CharField = models.CharField(max_length=600, blank=True, null=True)
+    name = models.CharField(max_length=100, unique=True, blank=False)
+    description = models.CharField(max_length=600, blank=True, null=True)
 
     def __str__(self) -> str:
         return self.name
@@ -24,10 +24,10 @@ class Period(models.Model):
 class Collection(models.Model):
     # db_table = "collections"
 
-    name: models.CharField = models.CharField(max_length=100, unique=True, blank=False)
-    description: models.CharField = models.CharField(max_length=600, blank=False)
-    enabled: models.BooleanField = models.BooleanField(blank=False, default=True)
-    periods: models.ManyToManyField = models.ManyToManyField(Period, through="PeriodCollection")
+    name = models.CharField(max_length=100, unique=True, blank=False)
+    description = models.CharField(max_length=600, blank=False)
+    enabled = models.BooleanField(blank=False, default=True)
+    periods = models.ManyToManyField(Period, through="PeriodCollection")  # type: ignore
 
     def __str__(self) -> str:
         return self.name
@@ -36,8 +36,8 @@ class Collection(models.Model):
 class PeriodCollection(models.Model):
     # db_table = "period_collections"
 
-    period: models.ForeignKey = models.ForeignKey(Period, on_delete=models.CASCADE)
-    collection: models.ForeignKey = models.ForeignKey(Collection, on_delete=models.CASCADE)
+    period = models.ForeignKey(Period, on_delete=models.CASCADE)
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
 
     class Meta:
         constraints = [
@@ -54,10 +54,10 @@ class CollectionConfig(models.Model):
     class ConfigKeys(models.TextChoices):
         ASSIGNMENT_LIMIT = "ASSIGNMENT_LIMIT"
 
-    collection: models.ForeignKey = models.ForeignKey(Collection, on_delete=models.CASCADE)
-    name: models.CharField = models.CharField(max_length=100, blank=False, choices=ConfigKeys)  # type:ignore
-    value: models.CharField = models.CharField(max_length=255, blank=False)
-    description: models.CharField = models.CharField(max_length=600, blank=True)
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, blank=False, choices=ConfigKeys)  # type: ignore
+    value = models.CharField(max_length=255, blank=False)
+    description = models.CharField(max_length=600, blank=True)
 
     class Meta:
         constraints = [
@@ -71,7 +71,7 @@ class CollectionConfig(models.Model):
 class PeriodAssignment(models.Model):
     # db_table = "period_assignments"
 
-    period_collection: models.ForeignKey = models.ForeignKey(PeriodCollection, on_delete=models.CASCADE)
-    attendant_name: models.CharField = models.CharField(max_length=100, blank=False)
-    attendant_email: models.CharField = models.CharField(max_length=80, blank=True, null=True)
-    attendant_phone_number: models.CharField = models.CharField(max_length=15, blank=True, null=True)
+    period_collection = models.ForeignKey(PeriodCollection, on_delete=models.CASCADE)
+    attendant_name = models.CharField(max_length=100, blank=False)
+    attendant_email = models.CharField(max_length=80, blank=True, null=True)
+    attendant_phone_number = models.CharField(max_length=15, blank=True, null=True)
