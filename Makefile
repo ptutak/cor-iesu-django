@@ -23,7 +23,7 @@ check-hooks:
 run-dev:
 	python src/manage.py runserver
 
-.PHONY: migrate
-migrate:
+.PHONY: migrations
+migrations:
 	python src/manage.py makemigrations
 	python src/manage.py migrate

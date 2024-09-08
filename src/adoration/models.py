@@ -25,7 +25,7 @@ class Collection(models.Model):
     # db_table = "collections"
 
     name = models.CharField(max_length=100, unique=True, blank=False)
-    description = models.CharField(max_length=600, blank=False)
+    description = models.CharField(max_length=600, blank=True, null=True)
     enabled = models.BooleanField(blank=False, default=True)
     periods = models.ManyToManyField(Period, through="PeriodCollection")  # type: ignore
 
@@ -57,7 +57,7 @@ class CollectionConfig(models.Model):
     collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=False, choices=ConfigKeys)  # type: ignore
     value = models.CharField(max_length=255, blank=False)
-    description = models.CharField(max_length=600, blank=True)
+    description = models.CharField(max_length=600, blank=True, null=True)
 
     class Meta:
         constraints = [
@@ -75,3 +75,6 @@ class PeriodAssignment(models.Model):
     attendant_name = models.CharField(max_length=100, blank=False)
     attendant_email = models.CharField(max_length=80, blank=True, null=True)
     attendant_phone_number = models.CharField(max_length=15, blank=True, null=True)
+
+    def __str__(self) -> str:
+        return f"{self.period_collection.collection.name}: {self.period_collection.period.name} - {self.attendant_name}"
