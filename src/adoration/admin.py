@@ -1,8 +1,7 @@
-from django.db import models
+from django.contrib import admin
 from django.contrib.admin import ModelAdmin
-from django.contrib import admin
+from django.db import models
 from django.http import HttpRequest
-from django.contrib import admin
 
 # Register your models here.
 from .models import (
@@ -21,6 +20,7 @@ def generate_standard_hour_periods(modeladmin: ModelAdmin, request: HttpRequest,
 
 
 class PeriodAdmin(admin.ModelAdmin):
-    actions=[generate_standard_hour_periods]
+    actions = [generate_standard_hour_periods]
+
 
 admin.site.register([Collection, CollectionConfig, Period, PeriodAssignment, PeriodCollection], PeriodAdmin)

@@ -1,11 +1,11 @@
 from collections import namedtuple
 
 from django.db.models import Count
-from django.http import HttpRequest, HttpResponse, JsonResponse, HttpResponseBadRequest
-from django.shortcuts import render, redirect
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.shortcuts import redirect, render
 
 from .const import DefaultValues
-from .models import Collection, CollectionConfig, PeriodCollection, PeriodAssignment
+from .models import Collection, CollectionConfig, PeriodAssignment, PeriodCollection
 
 
 class G:
@@ -60,7 +60,7 @@ def assignments(request: HttpRequest) -> HttpResponse:
     form = request.POST
     form_fields_required = {"collection-select", "period-select", "first-name", "last-name"}
     if not form_fields_required.issubset(form.keys()):
-         return HttpResponseBadRequest(f"You have to provide the following form fields: {form_fields_required}")
+        return HttpResponseBadRequest(f"You have to provide the following form fields: {form_fields_required}")
 
     if "email" not in form and "phone-number" not in form:
         return HttpResponseBadRequest("You have to provide one of those form fields: 'email', 'phone-number'")
@@ -75,16 +75,18 @@ def assignments(request: HttpRequest) -> HttpResponse:
     if "phone-number" in form:
         phone_number = str(form["phone-number"])
 
-    period_collection = PeriodCollection.objects.filter(id=period_collection_id, collection__enabled=True).annotate(
-        assignments_count=Count("periodassignment")
-    ).first()
+    period_collection = (
+        PeriodCollection.objects.filter(id=period_collection_id, collection__enabled=True)
+        .annotate(assignments_count=Count("periodassignment"))
+        .first()
+    )
 
     if period_collection is None:
         return HttpResponseBadRequest("The period collection you have sellected is not available")
 
-
-
-    if period_collection.assignments_count < limit_per_collection.get(period_collection.collection.id, DefaultValues.ASSIGNMENT_LIMIT):
+    if period_collection.assignments_count < limit_per_collection.get(
+        period_collection.collection.id, DefaultValues.ASSIGNMENT_LIMIT
+    ):
         new_assignment = PeriodAssignment(
             period_collection=PeriodCollection.objects.get(id=period_collection_id),
             attendant_email=email,
